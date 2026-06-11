@@ -2,14 +2,18 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 
-# 1. Load the AI Text Summarizer (Updated for complete stability)
+# 1. Load the AI Text Summarizer (Patched for Python 3.14 stability)
 @st.cache_resource
 def load_ai():
-    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+    from transformers.pipelines.text_summarization import SummarizationPipeline
+    
     model_name = "t5-small"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
-    return pipeline("summarization", model=model, tokenizer=tokenizer)
+    
+    # Direct class instantiation bypasses the registry KeyError bug
+    return SummarizationPipeline(model=model, tokenizer=tokenizer, task="summarization")
 
 summarizer = load_ai()
 
