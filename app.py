@@ -1,12 +1,15 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-from transformers import pipeline
 
-# 1. Load the AI Text Summarizer (Lightweight & Fast)
+# 1. Load the AI Text Summarizer (Updated for complete stability)
 @st.cache_resource
 def load_ai():
-    return pipeline("summarization", model="t5-small")
+    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+    model_name = "t5-small"
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
+    return pipeline("summarization", model=model, tokenizer=tokenizer)
 
 summarizer = load_ai()
 
