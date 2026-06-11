@@ -2,18 +2,17 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 
-# 1. Load the AI Text Summarizer (Patched for Python 3.14 stability)
+# 1. Load the AI Text Summarizer (Rock-Solid Pipeline Initialization)
 @st.cache_resource
 def load_ai():
-    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-    from transformers.pipelines.text_summarization import SummarizationPipeline
+    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
     
     model_name = "t5-small"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
     
-    # Direct class instantiation bypasses the registry KeyError bug
-    return SummarizationPipeline(model=model, tokenizer=tokenizer, task="summarization")
+    # Passing the pre-loaded model object avoids registry-string lookups entirely
+    return pipeline(task="summarization", model=model, tokenizer=tokenizer)
 
 summarizer = load_ai()
 
