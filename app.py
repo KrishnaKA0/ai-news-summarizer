@@ -25,7 +25,7 @@ def fetch_live_news():
         soup = BeautifulSoup(response.text, 'html.parser')
         links = soup.find_all('span', class_='titleline')
         articles = []
-        for link in links[:12]: # Upgraded to grab top 12 articles
+        for link in links[:12]: 
             a_tag = link.find('a')
             if a_tag:
                 articles.append({"title": a_tag.text, "url": a_tag['href']})
@@ -36,13 +36,13 @@ def fetch_live_news():
 # 3. Premium Web Interface Design
 st.set_page_config(page_title="PulseAI News Intel", page_icon="⚡", layout="wide")
 
-# Custom CSS styling banner
+# Custom CSS styling banner (Fixed keyword syntax)
 st.markdown("""
     <div style="background: linear-gradient(90deg, #1f4068, #162447); padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 8px solid #e43f5a;">
         <h1 style="color: white; margin: 0; font-family: 'Helvetica Neue', sans-serif;">⚡ PulseAI News Intel</h1>
         <p style="color: #cbd5e1; margin: 5px 0 0 0; font-size: 1.1rem;">Dynamic Web Scraper & Contextual Executive Summarization Engine</p>
     </div>
-""", unsafe_transform=True)
+""", unsafe_allow_html=True)
 
 # Sidebar Control Room
 st.sidebar.markdown("### 🎛️ Control Panel")
@@ -73,27 +73,24 @@ if run_pipeline:
             
             with left_col:
                 st.markdown("### 🤖 Cognitive AI Summary")
-                # Using an info container block for clean reading contrast
                 st.info(summary_paragraph)
                 
             with right_col:
                 st.markdown("### 🎯 Curated Live Feed")
-                # Custom container card scroll look
                 for idx, art in enumerate(news, 1):
                     st.markdown(f"""
                         <div style="background-color: #1a1a2e; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-bottom: 2px solid #1f4068;">
                             <strong style="color: #e43f5a;">{idx}.</strong> 
                             <a href="{art['url']}" target="_blank" style="color: #cbd5e1; text-decoration: none; font-weight: 500;">{art['title']}</a>
                         </div>
-                    """, unsafe_transform=True)
+                    """, unsafe_allow_html=True)
         else:
             st.error("🚨 Connection timeout. Target server did not respond. Please try running the pipeline again.")
 else:
-    # Beautiful Placeholder state when user first lands on the app
     st.markdown("""
         <div style="text-align: center; padding: 60px 20px; color: #64748b; background-color: #0f172a; border-radius: 8px; border: 1px dashed #334155;">
             <span style="font-size: 3rem;">📥</span>
             <h3 style="margin-top: 15px; color: #94a3b8;">The Intelligence Feed is Idle</h3>
             <p>Please launch the automated pipeline from the left <b>Control Panel</b> to collect real-time tech insights.</p>
         </div>
-    """, unsafe_transform=True)
+    """, unsafe_allow_html=True)
